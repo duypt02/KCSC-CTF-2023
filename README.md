@@ -206,7 +206,7 @@ Truy cập vào gist `Get hidden channel information using access token`, nhưng
 Ở đây ta xem được comment giữa author và truongangok (người đang đi tìm). Từ đây ta tìm được một đoạn Token discord, thực hiện login vào. 
 Script login được người đồng đội mình tìm được:
 
-`
+```
 function login(token) {
 setInterval(() => {
 document.body.appendChild(document.createElement `iframe`).contentWindow.localStorage.token = `"${token}"`
@@ -217,10 +217,62 @@ location.reload();
 }
 
 login('PASTE TOKEN HERE')
-`
+```
 
 ![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/3f6eec04-e318-495f-87e1-be422807cb54)
 
 Do hôm nay mình log thì token đã die nên không log vào được
 
 Sau khi login, flag chính là tên người dùng discord, thực hiện decode base64 sẽ thu được flag
+
+# Connection (MISC)
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/69cc618c-755d-41d1-8227-3a61a311716d)
+
+Bài này sau khi end giải, nhận được hint thì mình thử làm lại
+## Description
+Challenge yêu cầu tìm một người có tên `justinccase2511`
+
+## Solution 
+Vào [WhatsMyName](https://whatsmyname.app/) để tìm các thông tin liên quan đến username `justinccase2511`
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/00c93b84-166b-4fbb-8377-e67ade382ecb)
+
+Ta nhận được một trang twitter capture bởi Wayback Machine, truy cập vào kết quả tìm kiếm:
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/1a08f455-da26-48b0-8641-01d018754b74)
+
+Do username trên twitter đã đổi nhưng ID của tài khoản không thay đổi nên ta có thể tìm username hiện tại bằng ID lấy từ usernamw cũ trên bản twitter capture
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/3c89f9cf-2735-4465-8663-97b395fc99e7)
+
+Convert:
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/0435aee8-6601-4bf1-8b95-ee5f3efd6345)
+
+Truy cập profile user vừa tìm ra
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/cedf5f20-98b4-4d02-a784-7b3209f6d599)
+
+Người này có một tweet chứa một link dẫn tới google sheet:
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/a3bd37e5-3d32-430c-858b-380b61a35289)
+
+Để lấy được mail của owner ta sẽ thêm lối tắt sheet này vào drive, tại driver ta sẽ xem được mail:
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/9c974a25-fda1-42f4-a8be-29a1b478d7ed)
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/b0f20b4d-d842-4ab2-b85a-da93a0d880c0)
+
+Từ mail ta tìm được user trên tumblr
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/5530590d-acd8-44ea-bf85-4f922d976f08)
+
+Sửa một chút css để xem avatar:
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/9718f32b-2edf-4acb-8e60-356f97183c6d)
+
+Flag: `KCSC{3m4iL_t0_TumbRL???_1b8ad0}`
+
+
+
+
