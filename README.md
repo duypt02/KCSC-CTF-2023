@@ -1,3 +1,15 @@
+# Tables of Contents
+## WEB
+### [Bypass Capcha](https://github.com/duypt02/KCSC-CTF-2023/blob/main/README.md#bypass-captcha-web)
+### [valentine stolen](https://github.com/duypt02/KCSC-CTF-2023/blob/main/README.md#valentine-stolen--web)
+### [Petshop](https://github.com/duypt02/KCSC-CTF-2023/blob/main/README.md#petshop-web)
+
+## MISC
+### [Discord check](https://github.com/duypt02/KCSC-CTF-2023/blob/main/README.md#discord-check-misc)
+### [Git Gud](https://github.com/duypt02/KCSC-CTF-2023/blob/main/README.md#git-gud-misc)
+### [Shackles](https://github.com/duypt02/KCSC-CTF-2023/blob/main/README.md#shackles-misc)
+### [Connection](https://github.com/duypt02/KCSC-CTF-2023/blob/main/README.md#connection-misc)
+
 # Bypass Captcha (WEB)
 Đây là một bài mà team mình đã giải được trong giải vừa qua sau khi bắt được các tín hiệu vũ trụ từ các bậc tiền bối
 
