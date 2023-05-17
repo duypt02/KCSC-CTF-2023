@@ -1,4 +1,4 @@
-# Bypass Captcha 
+# Bypass Captcha (WEB)
 Đây là một bài mà team mình đã giải được trong giải vừa qua sau khi bắt được các tín hiệu vũ trụ từ các bậc tiền bối
 
 ![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/713a11b4-b200-41e0-a552-65db26000258)
@@ -91,7 +91,7 @@ Trong giải này team mình làm theo cách 1:
 
 Flag: `KCSC{Bypass_Turnstile_Cloudflare_1e22c0f8}`
 
-# valentine (stolen) 
+# valentine (stolen)  (WEB)
 ![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/95d4588f-ebcf-4cce-a42d-e8ab20db09e8)
 
 ## Description
@@ -145,5 +145,82 @@ Kết quả:
 
 Flag: `KCSC{https://www.youtube.com/watch?v=A5OLaBlQP9I}`
 
+# Discord check (MISC)
 
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/14a1f85c-5ec3-49b9-914d-5952dcd8cfcd)
 
+Bài này ta chỉ cần vào Discord của giải để lấy flag
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/f3a12125-fcfc-4500-95f6-e1b9cff2f677)
+
+# Git Gud (MISC)
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/da234ce1-0360-4acf-8539-f9a979c7fed0)
+
+## Description
+Challenge cung cấp một folder đã zip, thực hiện unzip thu được folder `.git`, thường dạng bài này ta sẽ xem log của nó sẽ thu được những thông tin có ích 
+
+## Solution
+Thực hiện xem log của git bằng command `git log`
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/d2087858-e37e-49a4-94ab-ad3c7d918e31)
+
+Sau khi xem log thì ta thấy có rất nhiều sửa đổi ở đây, thực hiện khôi phục lại bằng lệnh `git checkout`
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/129ed031-e96f-40d5-ba0c-88e20cc82f7e)
+
+Khôi phục được 1 file ảnh:
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/8763c8b0-ac9c-42b3-ad3c-523e1330fd69)
+
+Flag: `KCSC{G1t_h1st0Ry_d1v1n9}`
+
+# Shackles (MISC)
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/bbe7769f-cd97-4c71-9835-202a1b88478e)
+
+## Description
+Bài này yêu cầu ta phải tìm một người có tên `justatree781 ` sau đó truy cập vào tài khoản người này
+
+### Solution
+Trên Twitter ta tìm được một user có tên giống như username đã được cung cấp
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/9248d9ab-72b4-445d-a4b9-6cd23584cc80)
+
+Người này có một tweet kèm theo một đường link, thực hiện truy cập vào:
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/511d14f2-7a87-463a-8b74-9aca16c4b255)
+
+Ở đây có một list thông tin nhưng không có cái nào có thể dùng được, nhưng từ URL ta có thể truy cập vào profile trên github gist của người này 
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/6a317e06-6e50-4068-b499-f9d7e1bf234a)
+
+Trên profile có gán một link pastebin, nhưng truy cập vào sẽ không thu được gì
+
+Truy cập vào gist `Get hidden channel information using access token`, nhưng ta sẽ không view raw mà chỉ xem bình thường
+
+`https://gist.github.com/truongangok/680ebf037a08d7dfe2ef0bf3da41d9d3/`
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/aa1f9069-a0d9-4e3a-95a6-6935ba025481)
+
+Ở đây ta xem được comment giữa author và truongangok (người đang đi tìm). Từ đây ta tìm được một đoạn Token discord, thực hiện login vào. 
+Script login được người đồng đội mình tìm được:
+
+`
+function login(token) {
+setInterval(() => {
+document.body.appendChild(document.createElement `iframe`).contentWindow.localStorage.token = `"${token}"`
+}, 50);
+setTimeout(() => {
+location.reload();
+}, 2500);
+}
+
+login('PASTE TOKEN HERE')
+`
+
+![image](https://github.com/duypt02/KCSC-CTF-2023/assets/86275419/3f6eec04-e318-495f-87e1-be422807cb54)
+
+Do hôm nay mình log thì token đã die nên không log vào được
+
+Sau khi login, flag chính là tên người dùng discord, thực hiện decode base64 sẽ thu được flag
